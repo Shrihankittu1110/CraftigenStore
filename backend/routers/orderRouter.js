@@ -26,6 +26,8 @@ const allowedTrackingStatuses = [
 
 const allowedOrderStatuses = ['Placed', 'Processing', 'Shipped', 'Delivered', 'Cancelled'];
 const allowedPaymentStatuses = ['Pending', 'Paid', 'Failed', 'Refunded'];
+const MIN_ITEM_PRICE = 0;
+const MAX_ITEM_PRICE = 100000;
 
 const buildOrderItems = async (items, errors) => {
     if (!Array.isArray(items) || !items.length) {
@@ -38,30 +40,42 @@ const buildOrderItems = async (items, errors) => {
     for (const item of items) {
         const productId = cleanString(item.productId || item.id || item._id);
         const quantity = Number(item.quantity);
+        const name = assertRequiredString(item, 'name', errors, { min: 2, max: 120, label: 'Item name' });
+        const image = cleanString(item.image);
+        const price = Number(item.price);
 
         if (!Number.isInteger(quantity) || quantity < 1) {
             errors.items = 'Each item must include a valid quantity';
             continue;
         }
 
-        if (!productId || !isValidId(productId)) {
-            errors.items = 'Each item must reference a valid product';
+        if (!Number.isFinite(price) || price < MIN_ITEM_PRICE || price > MAX_ITEM_PRICE) {
+            errors.items = 'Each item must include a valid price';
             continue;
         }
 
-        const product = await Product.findById(productId);
-        if (!product) {
-            errors.items = 'One or more products are no longer available';
-            continue;
-        }
+        if (productId && isValidId(productId)) {
+            const product = await Product.findById(productId);
+            if (!product) {
+                errors.items = 'One or more products are no longer available';
+                continue;
+            }
 
-        normalizedItems.push({
-            productId: product._id,
-            name: product.title || product.name,
-            image: product.image,
-            price: product.price,
-            quantity
-        });
+            normalizedItems.push({
+                productId: product._id,
+                name: product.title || product.name,
+                image: product.image,
+                price: product.price,
+                quantity
+            });
+        } else {
+            normalizedItems.push({
+                name,
+                image,
+                price,
+                quantity
+            });
+        }
     }
 
     return normalizedItems;
