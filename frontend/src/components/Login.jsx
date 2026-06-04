@@ -18,25 +18,31 @@ const Login = () => {
   const loginForm = useFormik({
     initialValues: { email: "", password: "" },
     onSubmit: async (values, action) => {
-      const res = await fetch(`${API_BASE_URL}/user/authenicate`, {
-        method: "POST",
-        body: JSON.stringify(values),
-        headers: { "Content-Type": "application/json" },
-      });
+      try {
+        const res = await fetch(`${API_BASE_URL}/user/authenicate`, {
+          method: "POST",
+          body: JSON.stringify(values),
+          headers: { "Content-Type": "application/json" },
+        });
 
-      action.resetForm();
+        action.resetForm();
 
-      if (res.status === 200) {
-        const data = await res.json();
-        sessionStorage.setItem("user", JSON.stringify(data));
-        setCurrentUser(data);
-        setLoggedIn(true);
-        Swal.fire({ icon: "success", title: "Login Success" });
-        navigate("/home");
-      } else if (res.status === 401) {
-        Swal.fire({ icon: "error", title: "Login Failed", text: "Email or password is incorrect" });
-      } else {
-        Swal.fire({ icon: "error", title: "Something Went Wrong" });
+        if (res.status === 200) {
+          const data = await res.json();
+          sessionStorage.setItem("user", JSON.stringify(data));
+          setCurrentUser(data);
+          setLoggedIn(true);
+          Swal.fire({ icon: "success", title: "Login Success" });
+          navigate("/home");
+        } else if (res.status === 401) {
+          Swal.fire({ icon: "error", title: "Login Failed", text: "Email or password is incorrect" });
+        } else {
+          Swal.fire({ icon: "error", title: "Something Went Wrong" });
+        }
+      } catch (error) {
+        Swal.fire({ icon: "error", title: "Network Error", text: "Please try again shortly" });
+      } finally {
+        action.setSubmitting(false);
       }
     },
     validationSchema: LoginSchema,
@@ -72,7 +78,16 @@ const Login = () => {
               <p className="error-label">{loginForm.touched.password ? loginForm.errors.password : ""}</p>
               <input className="field" placeholder="Password" type="password" name="password" onChange={loginForm.handleChange} value={loginForm.values.password} />
             </div>
-            <button type="submit" className="btn-primary w-full">Login</button>
+            <button type="submit" className="btn-primary w-full" disabled={loginForm.isSubmitting}>
+              {loginForm.isSubmitting ? (
+                <>
+                  <i className="fa-solid fa-spinner fa-spin" />
+                  Logging in, please wait...
+                </>
+              ) : (
+                "Login"
+              )}
+            </button>
           </form>
           <p className="mt-6 text-center text-sm text-stone-600">
             New here? <Link to="/signup" className="font-black text-emerald-900">Create an account</Link>
