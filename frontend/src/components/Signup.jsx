@@ -21,24 +21,30 @@ const Signup = () => {
   const signupForm = useFormik({
     initialValues: { name: "", email: "", password: "" },
     onSubmit: async (values, action) => {
-      const res = await fetch(`${API_BASE_URL}/user/add`, {
-        method: "POST",
-        body: JSON.stringify({ ...values, avatar: avatarPath }),
-        headers: { "Content-Type": "application/json" },
-      });
-
-      const data = await res.json().catch(() => ({}));
-
-      if (res.status === 200) {
-        Swal.fire({ icon: "success", title: "Signup Success", text: "Now login to continue" });
-        action.resetForm();
-        navigate("/login");
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Signup failed",
-          text: data.message || "Some error occurred",
+      try {
+        const res = await fetch(`${API_BASE_URL}/user/add`, {
+          method: "POST",
+          body: JSON.stringify({ ...values, avatar: avatarPath }),
+          headers: { "Content-Type": "application/json" },
         });
+
+        const data = await res.json().catch(() => ({}));
+
+        if (res.status === 200) {
+          Swal.fire({ icon: "success", title: "Signup Success", text: "Now login to continue" });
+          action.resetForm();
+          navigate("/login");
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Signup failed",
+            text: data.message || "Some error occurred",
+          });
+        }
+      } catch (error) {
+        Swal.fire({ icon: "error", title: "Network Error", text: "Please try again shortly" });
+      } finally {
+        action.setSubmitting(false);
       }
     },
     validationSchema: signupSchema,
@@ -109,7 +115,16 @@ const Signup = () => {
               <input className="field file:mr-4 file:rounded-full file:border-0 file:bg-emerald-900 file:px-4 file:py-2 file:text-sm file:font-bold file:text-white" type="file" onChange={uploadFile} />
               {avatarPath && <p className="mt-2 text-xs font-bold text-emerald-800">Uploaded: {avatarPath}</p>}
             </div>
-            <button type="submit" className="btn-primary w-full">Sign Up</button>
+            <button type="submit" className="btn-primary w-full" disabled={signupForm.isSubmitting}>
+              {signupForm.isSubmitting ? (
+                <>
+                  <i className="fa-solid fa-spinner fa-spin" />
+                  Creating account, please wait...
+                </>
+              ) : (
+                "Sign Up"
+              )}
+            </button>
           </form>
           <p className="mt-6 text-center text-sm text-stone-600">
             Already registered? <Link to="/login" className="font-black text-emerald-900">Login</Link>
