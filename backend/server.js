@@ -39,7 +39,12 @@ app.set('trust proxy', 1);
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || clientUrls.includes(origin)) {
+      const allowedOrigins = [
+        ...clientUrls,
+        "https://craftigen-store.vercel.app",
+      ];
+
+      if (!origin || allowedOrigins.includes(origin)) {
         return callback(null, true);
       }
 
