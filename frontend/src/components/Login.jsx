@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Swal from "sweetalert2";
@@ -14,6 +14,7 @@ const LoginSchema = Yup.object().shape({
 const Login = () => {
   const navigate = useNavigate();
   const { setCurrentUser, setLoggedIn } = useUserContext();
+  const [showPassword, setShowPassword] = useState(false);
 
   const loginForm = useFormik({
     initialValues: { email: "", password: "" },
@@ -76,7 +77,25 @@ const Login = () => {
             <div>
               <label className="field-label">Password</label>
               <p className="error-label">{loginForm.touched.password ? loginForm.errors.password : ""}</p>
-              <input className="field" placeholder="Password" type="password" name="password" onChange={loginForm.handleChange} value={loginForm.values.password} />
+              <div className="relative">
+                <input
+                  className="field pr-14"
+                  placeholder="Password"
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  onChange={loginForm.handleChange}
+                  value={loginForm.values.password}
+                />
+                <button
+                  type="button"
+                  className="absolute right-4 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full text-stone-500 transition hover:bg-stone-100 hover:text-emerald-900"
+                  onClick={() => setShowPassword((value) => !value)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  title={showPassword ? "Hide password" : "Show password"}
+                >
+                  <i className={`fa-solid ${showPassword ? "fa-eye-slash" : "fa-eye"}`} />
+                </button>
+              </div>
             </div>
             <button type="submit" className="btn-primary w-full" disabled={loginForm.isSubmitting}>
               {loginForm.isSubmitting ? (
