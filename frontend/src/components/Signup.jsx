@@ -16,6 +16,7 @@ const signupSchema = Yup.object().shape({
 const Signup = () => {
   const navigate = useNavigate();
   const [avatarPath, setAvatarPath] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const signupForm = useFormik({
     initialValues: { name: "", email: "", password: "" },
@@ -26,12 +27,18 @@ const Signup = () => {
         headers: { "Content-Type": "application/json" },
       });
 
+      const data = await res.json().catch(() => ({}));
+
       if (res.status === 200) {
         Swal.fire({ icon: "success", title: "Signup Success", text: "Now login to continue" });
         action.resetForm();
         navigate("/login");
       } else {
-        Swal.fire({ icon: "error", title: "Oops", text: "Some error occurred" });
+        Swal.fire({
+          icon: "error",
+          title: "Signup failed",
+          text: data.message || "Some error occurred",
+        });
       }
     },
     validationSchema: signupSchema,
@@ -78,7 +85,24 @@ const Signup = () => {
             <div>
               <label className="field-label">Password</label>
               <p className="error-label">{signupForm.touched.password ? signupForm.errors.password : ""}</p>
-              <input className="field" type="password" name="password" onChange={signupForm.handleChange} value={signupForm.values.password} />
+              <div className="relative">
+                <input
+                  className="field pr-14"
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  onChange={signupForm.handleChange}
+                  value={signupForm.values.password}
+                />
+                <button
+                  type="button"
+                  className="absolute right-4 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full text-stone-500 transition hover:bg-stone-100 hover:text-emerald-900"
+                  onClick={() => setShowPassword((value) => !value)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  title={showPassword ? "Hide password" : "Show password"}
+                >
+                  <i className={`fa-solid ${showPassword ? "fa-eye-slash" : "fa-eye"}`} />
+                </button>
+              </div>
             </div>
             <div>
               <label className="field-label">Profile avatar</label>
