@@ -1,0 +1,30 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "CraftigenStore Express API",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "start:prod": "node server.js",
+    "dev": "nodemon server.js",
+    "check": "node --check server.js && node --check routers/userRouter.js && node --check routers/productRouter.js && node --check routers/contactRouter.js && node --check routers/orderRouter.js && node --check routers/util.js && node --check routers/helpers.js && node --check services/passwordService.js && node --check models/userModel.js && node --check models/productModel.js && node --check models/contactModel.js && node --check models/orderModel.js"
+  },
+  "keywords": [
+    "express",
+    "mongodb",
+    "marketplace"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.2",
+    "mongoose": "^7.4.2",
+    "multer": "^1.4.5-lts.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

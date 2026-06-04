@@ -1,0 +1,30 @@
+# dependencies
+node_modules/
+
+# build output
+dist/
+build/
+coverage/
+
+# environment files
+.env
+.env.*
+!.env.example
+backend/.env
+backend/.env.example
+frontend/.env
+frontend/.env.example
+
+# runtime/generated files
+backend/uploads/
+*.log
+
+# caches
+.vite/
+.cache/
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
