@@ -6,13 +6,14 @@ import BackButton from "./BackButton";
 
 const ManageUser = () => {
   const [userList, setUserList] = useState([]);
-  const getDisplayRole = (user) => (user.email?.toLowerCase() === "admin123@gmail.com" ? "admin" : "customer");
+  const getDisplayRole = (user) => (user.email?.toLowerCase() === "admin123@gmail.com" ? "admin" : user.role);
+  const isVisibleUser = (user) => ["admin", "customer"].includes(getDisplayRole(user));
 
   const fetchUserData = async () => {
     const res = await fetch(`${API_BASE_URL}/user/getall`, { headers: getAuthHeaders() });
     if (res.status === 200) {
       const data = await res.json();
-      setUserList(data);
+      setUserList(data.filter(isVisibleUser));
     }
   };
 

@@ -63,7 +63,11 @@ router.post('/add', asyncHandler(async (req, res) => {
 
 router.get('/getall', requireAdmin, asyncHandler(async (req, res) => {
     const users = await User.find({}).sort({ createdAt: -1 });
-    return res.json(users.map(sanitizeUser));
+    const visibleUsers = users
+        .map(sanitizeUser)
+        .filter((user) => user && ['admin', 'customer'].includes(user.role));
+
+    return res.json(visibleUsers);
 }));
 
 router.get('/getid/:id', requireOwner, asyncHandler(async (req, res) => {

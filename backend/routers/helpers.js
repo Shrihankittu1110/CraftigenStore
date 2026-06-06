@@ -76,7 +76,7 @@ const sanitizeUser = (user) => {
     delete data.password;
     if (adminEmails.includes(String(data.email || '').toLowerCase())) {
         data.role = 'admin';
-    } else {
+    } else if (!data.role) {
         data.role = 'customer';
     }
     return data;
