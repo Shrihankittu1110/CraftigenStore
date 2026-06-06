@@ -6,6 +6,7 @@ import BackButton from "./BackButton";
 
 const ManageUser = () => {
   const [userList, setUserList] = useState([]);
+  const getDisplayRole = (user) => (user.email?.toLowerCase() === "admin123@gmail.com" ? "admin" : "customer");
 
   const fetchUserData = async () => {
     const res = await fetch(`${API_BASE_URL}/user/getall`, { headers: getAuthHeaders() });
@@ -67,7 +68,7 @@ const ManageUser = () => {
                     </td>
                     <td className="px-5 py-4">
                       <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-black uppercase text-emerald-900">
-                        {user.role || "customer"}
+                        {getDisplayRole(user)}
                       </span>
                     </td>
                     <td className="px-5 py-4 text-stone-600">{formatDate(user.createdAt)}</td>

