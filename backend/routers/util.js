@@ -51,7 +51,7 @@ router.post('/uploadfile', (req, res) => {
 
       return res.json({
          message: 'File uploaded successfully',
-         fileName: req.file.filename,
+         fileName: `uploads/${req.file.filename}`,
          originalName: req.file.originalname,
          size: req.file.size
       });

@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import useUserContext from "../UserContext";
 import { useCart } from "../contexts/CartContext";
-import { buildFileUrl } from "../config";
 import { isAdminUser } from "../auth";
+import Avatar from "./Avatar";
 
 const brandLogoUrl = "https://thebombaystore.com/cdn/shop/files/favicon_32x32.png?v=1616503590";
 
@@ -93,7 +93,7 @@ const Navbar = () => {
             {loggedIn && currentUser ? (
               <div className="relative">
                 <button onClick={() => setUserOpen((value) => !value)} className="flex items-center gap-3 rounded-full border border-stone-200 bg-white py-2 pl-2 pr-4 transition hover:border-emerald-800">
-                  <img className="h-10 w-10 rounded-full object-cover" src={buildFileUrl(currentUser.avatar)} alt={currentUser.name} />
+                  <Avatar className="h-10 w-10 rounded-full object-cover text-sm" src={currentUser.avatar} name={currentUser.name} />
                   <span className="max-w-28 truncate text-sm font-bold text-stone-800">{currentUser.name}</span>
                   <i className="fa-solid fa-chevron-down text-xs text-stone-500" />
                 </button>

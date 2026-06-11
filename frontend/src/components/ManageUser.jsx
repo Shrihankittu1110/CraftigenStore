@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
-import { API_BASE_URL, buildFileUrl } from "../config";
+import { API_BASE_URL } from "../config";
 import { getAuthHeaders } from "../auth";
+import Avatar from "./Avatar";
 import BackButton from "./BackButton";
 
 const ManageUser = () => {
@@ -65,7 +66,7 @@ const ManageUser = () => {
                     <td className="px-5 py-4 font-bold text-stone-950">{user.name}</td>
                     <td className="px-5 py-4 text-stone-600">{user.email}</td>
                     <td className="px-5 py-4">
-                      <img className="h-12 w-12 rounded-full object-cover" src={buildFileUrl(user.avatar)} alt={user.name} />
+                      <Avatar className="h-12 w-12 rounded-full object-cover text-sm" src={user.avatar} name={user.name} />
                     </td>
                     <td className="px-5 py-4">
                       <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-black uppercase text-emerald-900">

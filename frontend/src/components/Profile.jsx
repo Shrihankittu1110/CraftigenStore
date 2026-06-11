@@ -1,8 +1,8 @@
 import React from "react";
 import { Link, Navigate } from "react-router-dom";
-import { buildFileUrl } from "../config";
 import { useCart } from "../contexts/CartContext";
 import { getStoredUser, isAdminUser } from "../auth";
+import Avatar from "./Avatar";
 import BackButton from "./BackButton";
 
 const accountCards = [
@@ -46,7 +46,6 @@ const Profile = () => {
   }
 
   const profilePath = `/updateuser/${currentUser._id || currentUser.id}`;
-  const userInitial = currentUser.name?.charAt(0)?.toUpperCase() || "U";
   const visibleCards = accountCards.filter((card) => !(isAdminUser(currentUser) && card.hideForAdmin));
 
   return (
@@ -63,13 +62,12 @@ const Profile = () => {
         <aside className="h-fit overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm">
           <div className="bg-[#14201e] p-6 text-white">
             <div className="flex items-center gap-4">
-              {currentUser.avatar ? (
-                <img className="h-20 w-20 rounded-full border-4 border-white/20 object-cover" src={buildFileUrl(currentUser.avatar)} alt={currentUser.name} />
-              ) : (
-                <span className="grid h-20 w-20 place-items-center rounded-full bg-amber-300 text-3xl font-black text-stone-950">
-                  {userInitial}
-                </span>
-              )}
+              <Avatar
+                className="h-20 w-20 rounded-full border-4 border-white/20 object-cover text-3xl"
+                textClassName="bg-amber-300 text-stone-950"
+                src={currentUser.avatar}
+                name={currentUser.name}
+              />
               <div className="min-w-0">
                 <p className="text-sm font-bold text-white/70">Hello,</p>
                 <h2 className="truncate text-2xl font-black">{currentUser.name}</h2>
