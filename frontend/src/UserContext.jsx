@@ -1,5 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 
 
@@ -24,7 +25,14 @@ import { useNavigate } from "react-router-dom";
         
         setCurrentUser(null);
         setLoggedIn(false);
-        navigate('/login')
+        navigate('/login');
+        Swal.fire({
+            icon: "success",
+            title: "Logged Out",
+            text: "You have been signed out successfully.",
+            timer: 1600,
+            showConfirmButton: false,
+        });
 
     }
 
@@ -37,4 +45,3 @@ import { useNavigate } from "react-router-dom";
 const useUserContext = () => useContext(UserContext) ;
 
 export default useUserContext;
-
