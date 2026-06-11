@@ -96,7 +96,7 @@ const featureBadges = [
 
 const Home = () => {
   return (
-    <main className="min-h-screen bg-[#f5efe5] text-stone-950">
+    <main className="min-h-screen overflow-x-hidden bg-[#f5efe5] text-stone-950">
       <section className="relative overflow-hidden bg-[#10201d] text-white">
         <div className="absolute inset-0">
           <img
@@ -108,8 +108,8 @@ const Home = () => {
           <div className="absolute inset-0 bg-[linear-gradient(110deg,rgba(16,32,29,0.96)_0%,rgba(16,32,29,0.82)_42%,rgba(16,32,29,0.30)_100%)]" />
         </div>
 
-        <div className="section-wrap relative grid min-h-[calc(100vh-5rem)] gap-10 py-12 lg:grid-cols-[1fr_430px] lg:items-center">
-          <div className="max-w-3xl">
+        <div className="section-wrap relative grid min-h-[calc(100vh-5rem)] gap-10 py-12 lg:grid-cols-[minmax(0,1fr)_430px] lg:items-center">
+          <div className="min-w-0 max-w-3xl">
             <p className="text-xs font-black uppercase tracking-[0.28em] text-amber-300">Craftigen Indian Handicrafts</p>
             <h1 className="mt-4 text-4xl font-black leading-[1.03] sm:text-6xl lg:text-7xl">
               Handmade pieces that make every corner feel considered.
@@ -127,9 +127,9 @@ const Home = () => {
               </Link>
             </div>
 
-            <div className="mt-10 grid max-w-2xl grid-cols-3 overflow-hidden rounded-2xl border border-white/15 bg-white/10 backdrop-blur">
+            <div className="mt-10 grid max-w-2xl grid-cols-1 overflow-hidden rounded-2xl border border-white/15 bg-white/10 backdrop-blur min-[420px]:grid-cols-3">
               {heroStats.map((stat) => (
-                <div key={stat.label} className="border-r border-white/10 p-4 last:border-r-0">
+                <div key={stat.label} className="border-b border-white/10 p-4 last:border-b-0 min-[420px]:border-b-0 min-[420px]:border-r min-[420px]:last:border-r-0">
                   <p className="text-2xl font-black text-amber-200">{stat.value}</p>
                   <p className="mt-1 text-xs font-bold uppercase tracking-wide text-white/70">{stat.label}</p>
                 </div>
@@ -137,10 +137,10 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+          <div className="grid min-w-0 gap-4 sm:grid-cols-2 lg:grid-cols-1">
             {collectionRows.map((item) => (
-              <Link key={item.title} to="/browse" className="group grid grid-cols-[112px_1fr] overflow-hidden rounded-2xl border border-white/15 bg-white/12 p-3 shadow-2xl shadow-black/20 backdrop-blur transition hover:-translate-y-1 hover:bg-white/18">
-                <img className="h-28 w-28 rounded-xl object-cover transition duration-500 group-hover:scale-105" src={item.image} alt={item.title} onError={useFallbackImage} />
+              <Link key={item.title} to="/browse" className="group grid grid-cols-[88px_minmax(0,1fr)] overflow-hidden rounded-2xl border border-white/15 bg-white/12 p-3 shadow-2xl shadow-black/20 backdrop-blur transition hover:-translate-y-1 hover:bg-white/18 min-[420px]:grid-cols-[112px_minmax(0,1fr)]">
+                <img className="h-[88px] w-[88px] rounded-xl object-cover transition duration-500 group-hover:scale-105 min-[420px]:h-28 min-[420px]:w-28" src={item.image} alt={item.title} onError={useFallbackImage} />
                 <div className="min-w-0 px-4 py-2">
                   <h2 className="text-lg font-black">{item.title}</h2>
                   <p className="mt-2 text-sm leading-5 text-white/72">{item.copy}</p>
@@ -181,8 +181,8 @@ const Home = () => {
       </section>
 
       <section className="bg-[#122622] py-16 text-white">
-        <div className="section-wrap grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
-          <div>
+        <div className="section-wrap grid gap-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-center">
+          <div className="min-w-0">
             <p className="text-xs font-black uppercase tracking-[0.24em] text-amber-300">Why Craftigen</p>
             <h2 className="mt-2 text-3xl font-black tracking-tight sm:text-4xl">Built like a modern store, filled with craft-led products.</h2>
             <p className="mt-4 max-w-xl text-sm leading-6 text-white/70 sm:text-base">
@@ -190,7 +190,7 @@ const Home = () => {
             </p>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-3">
+          <div className="grid min-w-0 gap-4 sm:grid-cols-3">
             {featureBadges.map((feature) => (
               <div key={feature.title} className="rounded-2xl border border-white/12 bg-white/10 p-5 backdrop-blur transition hover:-translate-y-1 hover:bg-white/15">
                 <span className="grid h-12 w-12 place-items-center rounded-full bg-amber-300 text-stone-950">
@@ -236,7 +236,7 @@ const Home = () => {
       </section>
 
       <section className="section-wrap pb-16">
-        <div className="grid overflow-hidden rounded-3xl bg-[#8f2f22] text-white shadow-[0_28px_80px_rgba(78,36,25,0.20)] lg:grid-cols-[1fr_420px]">
+        <div className="grid min-w-0 overflow-hidden rounded-3xl bg-[#8f2f22] text-white shadow-[0_28px_80px_rgba(78,36,25,0.20)] lg:grid-cols-[minmax(0,1fr)_420px]">
           <div className="p-8 sm:p-10 lg:p-12">
             <p className="text-xs font-black uppercase tracking-[0.24em] text-amber-200">Gift Better</p>
             <h2 className="mt-3 max-w-2xl text-3xl font-black leading-tight sm:text-5xl">Find handmade gifts that do not feel ordinary.</h2>

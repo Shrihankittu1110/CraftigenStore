@@ -45,6 +45,13 @@ const Navbar = () => {
         : "text-stone-700 hover:bg-white hover:text-emerald-900"
     }`;
 
+  const mobileNavClass = ({ isActive }) =>
+    `flex min-h-11 items-center rounded-xl px-4 text-sm font-bold transition ${
+      isActive
+        ? "bg-emerald-900 text-white shadow-lg shadow-emerald-900/15"
+        : "text-stone-700 hover:bg-white hover:text-emerald-900"
+    }`;
+
   useEffect(() => {
     if (!loggedIn) {
       setUserOpen(false);
@@ -62,13 +69,13 @@ const Navbar = () => {
     <header className="sticky top-0 z-50 border-b border-white/70 bg-[#f7f4ef]/88 backdrop-blur-xl">
       <div className="section-wrap">
         <nav className="flex h-20 items-center justify-between gap-4">
-          <NavLink to="/home" className="flex items-center gap-3">
+          <NavLink to="/home" className="flex min-w-0 items-center gap-3">
             <span className="grid h-12 w-12 place-items-center rounded-2xl bg-white shadow-lg shadow-amber-900/10 ring-1 ring-amber-200">
               <img className="h-8 w-8 object-contain" src={brandLogoUrl} alt="Craftigen logo" />
             </span>
-            <span>
-              <span className="block text-lg font-black leading-5 tracking-tight text-stone-950">Craftigen</span>
-              <span className="block text-xs font-bold uppercase tracking-[0.18em] text-emerald-700">Handcrafted Store</span>
+            <span className="min-w-0">
+              <span className="block truncate text-lg font-black leading-5 tracking-tight text-stone-950">Craftigen</span>
+              <span className="block truncate text-xs font-bold uppercase tracking-[0.18em] text-emerald-700">Handcrafted Store</span>
             </span>
           </NavLink>
 
@@ -122,43 +129,26 @@ const Navbar = () => {
         </nav>
 
         {menuOpen && (
-          <div className="grid gap-2 border-t border-stone-200 py-4 lg:hidden">
+          <div className="mx-[-1rem] max-h-[calc(100dvh-5rem)] overflow-y-auto border-t border-stone-200 bg-[#f7f4ef]/96 px-4 py-4 shadow-2xl shadow-stone-950/10 sm:mx-0 sm:rounded-b-2xl sm:border-x lg:hidden">
+            <div className="grid gap-2">
             {navLinks.map((link) => (
-              <NavLink key={link.to} to={link.to} className={navClass} onClick={() => setMenuOpen(false)}>
+              <NavLink key={link.to} to={link.to} className={mobileNavClass} onClick={() => setMenuOpen(false)}>
                 {link.label}
               </NavLink>
             ))}
+            </div>
             {loggedIn ? (
-              <>
-                <NavLink to="/cart" className="btn-secondary justify-between" onClick={() => setMenuOpen(false)}>
+              <div className="mt-4 grid gap-2 border-t border-stone-200 pt-4">
+                <NavLink to="/cart" className="btn-secondary min-h-11 justify-between py-2" onClick={() => setMenuOpen(false)}>
                   Cart <span>{cart.length}</span>
                 </NavLink>
-                <NavLink to="/orders" className="btn-secondary justify-center" onClick={() => setMenuOpen(false)}>
-                  Your Orders
-                </NavLink>
-                <NavLink to={profilePath} className="btn-secondary justify-center" onClick={() => setMenuOpen(false)}>
+                <NavLink to={profilePath} className="btn-secondary min-h-11 justify-center py-2" onClick={() => setMenuOpen(false)}>
                   View Profile
                 </NavLink>
-                {isAdminUser(currentUser) && (
-                  <>
-                    <NavLink to="/addproduct" className="btn-secondary justify-center" onClick={() => setMenuOpen(false)}>
-                      Add Product
-                    </NavLink>
-                    <NavLink to="/manageuser" className="btn-secondary justify-center" onClick={() => setMenuOpen(false)}>
-                      Manage Users
-                    </NavLink>
-                    <NavLink to="/admin/orders" className="btn-secondary justify-center" onClick={() => setMenuOpen(false)}>
-                      View Orders
-                    </NavLink>
-                    <NavLink to="/admin/tracking" className="btn-secondary justify-center" onClick={() => setMenuOpen(false)}>
-                      Tracking
-                    </NavLink>
-                  </>
-                )}
-                <button onClick={handleLogout} className="btn-danger justify-center">Log Out</button>
-              </>
+                <button onClick={handleLogout} className="btn-danger min-h-11 justify-center rounded-full py-2">Log Out</button>
+              </div>
             ) : (
-              <div className="grid grid-cols-2 gap-2">
+              <div className="mt-4 grid grid-cols-2 gap-2 border-t border-stone-200 pt-4">
                 <NavLink to="/login" className="btn-secondary" onClick={() => setMenuOpen(false)}>Login</NavLink>
                 <NavLink to="/signup" className="btn-primary" onClick={() => setMenuOpen(false)}>Register</NavLink>
               </div>

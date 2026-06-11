@@ -120,7 +120,7 @@ const Browse = () => {
   };
 
   return (
-    <main className="min-h-screen bg-[#f4f0e8] text-stone-950">
+    <main className="min-h-screen overflow-x-hidden bg-[#f4f0e8] text-stone-950">
       <section
         className="relative overflow-hidden text-white"
         style={{
@@ -131,15 +131,15 @@ const Browse = () => {
         }}
       >
         <div className="absolute inset-0 bg-[#0f1716]/15" />
-        <div className="section-wrap relative z-10 grid gap-8 py-8 lg:grid-cols-[1fr_430px] lg:items-center lg:py-10">
-          <div>
+        <div className="section-wrap relative z-10 grid max-w-full gap-6 py-8 lg:grid-cols-[1fr_430px] lg:items-center lg:py-10">
+          <div className="min-w-0">
             <p className="text-xs font-black uppercase tracking-[0.24em] text-amber-300">Craftigen Marketplace</p>
             <h1 className="mt-2 max-w-3xl text-3xl font-black leading-tight sm:text-5xl">Browse fresh handmade collections</h1>
             <p className="mt-4 max-w-2xl text-sm leading-6 text-white/75 sm:text-base">
               Search real store products by craft, category, material, and price.
             </p>
 
-            <div className="mt-6 flex overflow-hidden rounded-lg border-2 border-amber-400 bg-white shadow-xl shadow-black/20">
+            <div className="mt-6 flex w-full max-w-full overflow-hidden rounded-lg border-2 border-amber-400 bg-white shadow-xl shadow-black/20">
               <select
                 className="hidden border-r border-stone-200 bg-stone-100 px-3 text-sm font-bold text-stone-700 outline-none sm:block"
                 value={selectedCategory}
@@ -161,7 +161,7 @@ const Browse = () => {
               </button>
             </div>
 
-            <div className="mt-5 flex flex-wrap gap-2">
+            <div className="mt-5 flex max-w-full flex-wrap gap-2">
               {spotlightCategories.map((category) => (
                 <button
                   key={category}
@@ -174,8 +174,8 @@ const Browse = () => {
             </div>
           </div>
 
-          <div className="flex items-start justify-end">
-            <div className="max-w-[280px] rounded-2xl border border-amber-300/30 bg-amber-300 p-5 text-stone-950 shadow-xl shadow-black/10 backdrop-blur-sm">
+          <div className="flex min-w-0 items-start justify-start lg:justify-end">
+            <div className="w-full max-w-[280px] rounded-2xl border border-amber-300/30 bg-amber-300 p-5 text-stone-950 shadow-xl shadow-black/10 backdrop-blur-sm sm:w-auto">
               <p className="text-3xl font-black">{filteredItems.length}</p>
               <p className="text-sm font-bold">products matching your filters</p>
             </div>
@@ -184,7 +184,7 @@ const Browse = () => {
       </section>
 
       <section className="border-b border-stone-200 bg-white">
-        <div className="section-wrap py-5">
+        <div className="section-wrap max-w-full py-5">
           <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <p className="text-sm text-stone-600">
               {loading ? "Loading products..." : <>Showing <span className="font-black text-stone-950">{filteredItems.length}</span> results.</>}
@@ -194,10 +194,10 @@ const Browse = () => {
             </button>
           </div>
 
-          <div className="grid gap-4 rounded-2xl border border-stone-200 bg-[#fbf8f1] p-4 shadow-sm">
-            <div>
+          <div className="grid max-w-full gap-4 overflow-hidden rounded-2xl border border-stone-200 bg-[#fbf8f1] p-4 shadow-sm">
+            <div className="min-w-0">
               <p className="mb-3 text-xs font-black uppercase tracking-[0.18em] text-stone-500">Category</p>
-              <div className="flex gap-2 overflow-x-auto pb-1">
+              <div className="flex max-w-full gap-2 overflow-x-auto pb-1">
                 {categories.map((category) => (
                   <button
                     key={category}
@@ -212,11 +212,11 @@ const Browse = () => {
               </div>
             </div>
 
-            <div className="grid gap-4 md:grid-cols-[1fr_240px] lg:items-end">
+            <div className="grid min-w-0 gap-4 md:grid-cols-[1fr_240px] lg:items-end">
               <div />
               <label className="flex flex-col gap-2 text-sm font-bold text-stone-700">
                 Sort by
-                <select className="rounded-full border border-stone-300 bg-white px-4 py-2 outline-none focus:border-amber-500" value={sortBy} onChange={(event) => setSortBy(event.target.value)}>
+                <select className="w-full min-w-0 rounded-full border border-stone-300 bg-white px-4 py-2 outline-none focus:border-amber-500" value={sortBy} onChange={(event) => setSortBy(event.target.value)}>
                   <option value="featured">Featured</option>
                   <option value="newest">Newest</option>
                   <option value="price-low">Price: Low to High</option>
@@ -230,8 +230,8 @@ const Browse = () => {
         </div>
       </section>
 
-      <section className="section-wrap py-6">
-        <div>
+      <section className="section-wrap max-w-full py-6">
+        <div className="min-w-0">
           {loadError ? (
             <div className="rounded-xl bg-white p-10 text-center shadow-sm">
               <h2 className="text-2xl font-black text-stone-950">Products unavailable</h2>
@@ -250,7 +250,7 @@ const Browse = () => {
                 const detailPath = `/product/${item.source}/${item.id || item._id}`;
 
                 return (
-                  <article key={`${item.source}-${item.id || item._id}`} className="grid overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm transition duration-300 hover:-translate-y-0.5 hover:shadow-xl md:grid-cols-[250px_1fr_200px]">
+                  <article key={`${item.source}-${item.id || item._id}`} className="grid min-w-0 overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm transition duration-300 hover:-translate-y-0.5 hover:shadow-xl md:grid-cols-[250px_1fr_200px]">
                     <Link to={detailPath} className="group relative overflow-hidden bg-stone-100">
                       <img className="h-72 w-full object-cover transition duration-500 group-hover:scale-105 md:h-full" src={item.image} alt={item.title} onError={useFallbackImage} />
                       <span className="absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1 text-xs font-black text-stone-900 shadow-sm">{item.badge}</span>
