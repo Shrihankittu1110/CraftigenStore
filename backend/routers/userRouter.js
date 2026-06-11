@@ -16,7 +16,27 @@ const {
     withAuthToken
 } = require('./helpers');
 
-const passwordPattern = /^.{6,}$/;
+const passwordPattern = /^\S{6,}$/;
+
+const validatePassword = (value, errors, options = {}) => {
+    if (typeof value !== 'string') {
+        if (options.required) errors.password = 'Password is required';
+        return '';
+    }
+
+    if (!value) {
+        if (options.required) errors.password = 'Password is required';
+        return '';
+    }
+
+    if (value !== value.trim()) {
+        errors.password = 'Password cannot start or end with spaces';
+    } else if (!passwordPattern.test(value)) {
+        errors.password = 'Password must be at least 6 characters and cannot contain spaces';
+    }
+
+    return errors.password ? '' : value;
+};
 
 const buildUserPayload = async (body, options = {}) => {
     const errors = {};
@@ -34,13 +54,9 @@ const buildUserPayload = async (body, options = {}) => {
         payload.avatar = cleanString(body.avatar);
     }
 
-    if (!options.partial || body.password) {
-        const password = cleanString(body.password);
-        if (!password) {
-            errors.password = 'Password is required';
-        } else if (!passwordPattern.test(password)) {
-            errors.password = 'Password must be at least 6 characters long';
-        } else {
+    if (!options.partial || body.password !== undefined) {
+        const password = validatePassword(body.password, errors, { required: !options.partial });
+        if (password) {
             payload.password = await hashPassword(password);
         }
     }
@@ -119,9 +135,8 @@ router.put('/update/:id', requireOwner, asyncHandler(async (req, res) => {
 const authenticate = asyncHandler(async (req, res) => {
     const errors = {};
     const email = validateEmail(req.body.email, errors);
-    const password = cleanString(req.body.password);
+    const password = validatePassword(req.body.password, errors, { required: true });
 
-    if (!password) errors.password = 'Password is required';
     if (Object.keys(errors).length) return validationError(res, errors);
 
     const user = await User.findOne({ email }).select('+password');

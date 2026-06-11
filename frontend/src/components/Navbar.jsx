@@ -5,6 +5,8 @@ import { useCart } from "../contexts/CartContext";
 import { buildFileUrl } from "../config";
 import { isAdminUser } from "../auth";
 
+const brandLogoUrl = "https://thebombaystore.com/cdn/shop/files/favicon_32x32.png?v=1616503590";
+
 const publicLinks = [
   { label: "Home", to: "/home" },
   { label: "Browse", to: "/browse" },
@@ -48,8 +50,8 @@ const Navbar = () => {
       <div className="section-wrap">
         <nav className="flex h-20 items-center justify-between gap-4">
           <NavLink to="/home" className="flex items-center gap-3">
-            <span className="grid h-12 w-12 place-items-center rounded-2xl bg-emerald-900 text-lg font-black text-white shadow-lg shadow-emerald-900/20">
-              C
+            <span className="grid h-12 w-12 place-items-center rounded-2xl bg-white shadow-lg shadow-amber-900/10 ring-1 ring-amber-200">
+              <img className="h-8 w-8 object-contain" src={brandLogoUrl} alt="Craftigen logo" />
             </span>
             <span>
               <span className="block text-lg font-black leading-5 tracking-tight text-stone-950">Craftigen</span>

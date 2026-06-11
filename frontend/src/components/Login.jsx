@@ -8,7 +8,9 @@ import { API_BASE_URL } from "../config";
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Required"),
-  password: Yup.string().required("Password is required"),
+  password: Yup.string()
+    .required("Password is required")
+    .matches(/^\S+$/, "Password cannot contain spaces"),
 });
 
 const Login = () => {

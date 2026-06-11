@@ -10,7 +10,8 @@ const signupSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Required"),
   password: Yup.string()
     .required("Please enter your password")
-    .min(6, "Use at least 6 characters"),
+    .min(6, "Use at least 6 characters")
+    .matches(/^\S+$/, "Password cannot contain spaces"),
 });
 
 const Signup = () => {

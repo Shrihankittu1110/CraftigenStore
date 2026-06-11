@@ -2,9 +2,20 @@ import { Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
+import * as Yup from "yup";
 import { API_BASE_URL } from "../config";
 import { getAuthHeaders, getStoredUser } from "../auth";
 import BackButton from "./BackButton";
+
+const updateUserSchema = Yup.object().shape({
+  name: Yup.string().min(2, "Name must be at least 2 characters").max(50, "Name must be at most 50 characters").required("Name is required"),
+  email: Yup.string().email("Email is invalid").required("Email is required"),
+  password: Yup.string()
+    .test("password-empty-or-strong", "Password must be at least 6 characters and cannot contain spaces", (value) => {
+      if (!value) return true;
+      return /^\S{6,}$/.test(value);
+    }),
+});
 
 const UpdateUser = () => {
   const navigate = useNavigate();
@@ -57,10 +68,12 @@ const UpdateUser = () => {
           <h1 className="section-title mt-2">Edit profile</h1>
           {userData !== null ? (
             <Formik
-              initialValues={userData}
+              initialValues={{ ...userData, password: "" }}
+              validationSchema={updateUserSchema}
               onSubmit={async (values) => {
                 const payload = { ...values };
                 if (uploadedAvatar) payload.avatar = uploadedAvatar;
+                if (!payload.password) delete payload.password;
                 const res = await fetch(`${API_BASE_URL}/user/update/` + id, {
                   method: "PUT",
                   body: JSON.stringify(payload),

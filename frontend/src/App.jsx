@@ -7,6 +7,7 @@ import AdminOrders from './components/AdminOrders';
 import AdminTracking from './components/AdminTracking';
 import Browse from './components/Browse';
 import CartPage from './components/cart';
+import ChatBot from './components/ChatBot';
 import Checkout from './components/Checkout';
 import ContactUs from './components/ContactUs';
 import Footer from './components/Footer';
@@ -63,6 +64,7 @@ function App() {
               <Route path="updateuser/:id" element={<UserAuth><UpdateUser /></UserAuth>} />
             </Routes>
             <Footer />
+            <ChatBot />
           </CartProvider>
         </UserProvider>
       </BrowserRouter>
