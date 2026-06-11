@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import useUserContext from "../UserContext";
 import { useCart } from "../contexts/CartContext";
@@ -45,6 +45,19 @@ const Navbar = () => {
         : "text-stone-700 hover:bg-white hover:text-emerald-900"
     }`;
 
+  useEffect(() => {
+    if (!loggedIn) {
+      setUserOpen(false);
+      setMenuOpen(false);
+    }
+  }, [loggedIn]);
+
+  const handleLogout = () => {
+    setUserOpen(false);
+    setMenuOpen(false);
+    logout();
+  };
+
   return (
     <header className="sticky top-0 z-50 border-b border-white/70 bg-[#f7f4ef]/88 backdrop-blur-xl">
       <div className="section-wrap">
@@ -89,7 +102,7 @@ const Navbar = () => {
                     <NavLink className="block rounded-xl px-4 py-3 text-sm font-bold text-stone-700 hover:bg-emerald-50 hover:text-emerald-900" to={profilePath} onClick={() => setUserOpen(false)}>
                       View Profile
                     </NavLink>
-                    <button onClick={logout} className="block w-full rounded-xl px-4 py-3 text-left text-sm font-bold text-rose-700 hover:bg-rose-50">
+                    <button onClick={handleLogout} className="block w-full rounded-xl px-4 py-3 text-left text-sm font-bold text-rose-700 hover:bg-rose-50">
                       Log Out
                     </button>
                   </div>
@@ -142,7 +155,7 @@ const Navbar = () => {
                     </NavLink>
                   </>
                 )}
-                <button onClick={logout} className="btn-danger justify-center">Log Out</button>
+                <button onClick={handleLogout} className="btn-danger justify-center">Log Out</button>
               </>
             ) : (
               <div className="grid grid-cols-2 gap-2">
