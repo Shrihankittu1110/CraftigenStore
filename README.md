@@ -67,21 +67,7 @@ node -v
 npm -v
 ```
 
-### Install
 
-Follow the following steps to get development environment running.
-
-* Clone _'CraftigenStore.git'_ repository from GitHub
-
-  ```bash
-  git clone https://github.com/Adarsh01208/CraftigenStore.git
-  ```
-
-   _OR USING SSH_
-
-  ```bash
-  git clone git@github.com:Adarsh01208/CraftigenStore.git
-  ```
 
 * Install node modules
 
