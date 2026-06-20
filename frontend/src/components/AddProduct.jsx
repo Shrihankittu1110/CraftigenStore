@@ -16,6 +16,10 @@ const addProductSchema = Yup.object().shape({
     .required("Price is required"),
   category: Yup.string().trim().required("Category is required"),
   material: Yup.string().trim().required("Material is required"),
+  colour: Yup.string().trim().max(120, "Colour should be 120 characters or less"),
+  dimensions: Yup.string().trim().max(120, "Dimensions should be 120 characters or less"),
+  weight: Yup.string().trim().max(120, "Weight should be 120 characters or less"),
+  brand: Yup.string().trim().max(120, "Brand should be 120 characters or less"),
   description: Yup.string().trim().min(20, "Description should be at least 20 characters").required("Description is required"),
 });
 
@@ -30,6 +34,10 @@ const AddProduct = () => {
       price: "",
       description: "",
       material: "",
+      colour: "",
+      dimensions: "",
+      weight: "",
+      brand: "Craftigen",
       image: "",
     },
     onSubmit: async (values, action) => {
@@ -101,6 +109,26 @@ const AddProduct = () => {
               <label className="field-label">Material</label>
               <p className="error-label">{addProductForm.touched.material && addProductForm.errors.material}</p>
               <input className="field" type="text" name="material" onChange={addProductForm.handleChange} value={addProductForm.values.material} />
+            </div>
+            <div>
+              <label className="field-label">Colour</label>
+              <p className="error-label">{addProductForm.touched.colour && addProductForm.errors.colour}</p>
+              <input className="field" type="text" name="colour" onChange={addProductForm.handleChange} value={addProductForm.values.colour} />
+            </div>
+            <div>
+              <label className="field-label">Product Dimensions</label>
+              <p className="error-label">{addProductForm.touched.dimensions && addProductForm.errors.dimensions}</p>
+              <input className="field" type="text" name="dimensions" placeholder="30L x 20W x 12H cm" onChange={addProductForm.handleChange} value={addProductForm.values.dimensions} />
+            </div>
+            <div>
+              <label className="field-label">Item Weight</label>
+              <p className="error-label">{addProductForm.touched.weight && addProductForm.errors.weight}</p>
+              <input className="field" type="text" name="weight" placeholder="490 g" onChange={addProductForm.handleChange} value={addProductForm.values.weight} />
+            </div>
+            <div>
+              <label className="field-label">Brand</label>
+              <p className="error-label">{addProductForm.touched.brand && addProductForm.errors.brand}</p>
+              <input className="field" type="text" name="brand" onChange={addProductForm.handleChange} value={addProductForm.values.brand} />
             </div>
             <div>
               <label className="field-label">Upload Image</label>

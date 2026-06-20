@@ -78,6 +78,10 @@ const Browse = () => {
         title.toLowerCase().includes(query) ||
         String(item.category || "").toLowerCase().includes(query) ||
         String(item.material || "").toLowerCase().includes(query) ||
+        String(item.colour || item.color || "").toLowerCase().includes(query) ||
+        String(item.dimensions || "").toLowerCase().includes(query) ||
+        String(item.weight || "").toLowerCase().includes(query) ||
+        String(item.brand || "").toLowerCase().includes(query) ||
         String(item.description || "").toLowerCase().includes(query);
       const matchesCategory = selectedCategory === "All" || item.category === selectedCategory;
 
@@ -260,6 +264,9 @@ const Browse = () => {
                       <div className="mb-3 flex flex-wrap gap-2">
                         <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-black text-amber-900">{item.category}</span>
                         <span className="rounded-full bg-stone-100 px-3 py-1 text-xs font-bold text-stone-700">{item.material}</span>
+                        {(item.colour || item.color) && (
+                          <span className="rounded-full bg-stone-100 px-3 py-1 text-xs font-bold text-stone-700">{item.colour || item.color}</span>
+                        )}
                       </div>
                       <Link to={detailPath} className="text-xl font-black leading-7 text-[#0f1111] hover:text-[#c7511f] hover:underline">
                         {item.title || item.name}

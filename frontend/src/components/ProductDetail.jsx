@@ -18,6 +18,10 @@ const normalizeProduct = (product, source) => {
     reviews: product.reviews || 128,
     category: product.category || "Handcrafted",
     material: product.material || "Artisan finish",
+    colour: product.colour || product.color || "",
+    dimensions: product.dimensions || "",
+    weight: product.weight || product.itemWeight || "",
+    brand: product.brand || "Craftigen",
     delivery: product.delivery || "3-6 business days",
     description:
       product.description ||
@@ -25,6 +29,20 @@ const normalizeProduct = (product, source) => {
     image: source === "backend" ? buildFileUrl(product.image) : product.image,
     raw: product,
   };
+};
+
+const getProductSpecs = (product) => {
+  if (!product) return [];
+
+  const specs = [
+    ["Colour", product.colour],
+    ["Material", product.material],
+    ["Product Dimensions", product.dimensions],
+    ["Item Weight", product.weight],
+    ["Brand", product.brand],
+  ];
+
+  return specs.filter(([, value]) => value);
 };
 
 const ProductDetail = () => {
@@ -115,6 +133,8 @@ const ProductDetail = () => {
     });
   };
 
+  const productSpecs = getProductSpecs(product);
+
   if (loading) {
     return (
       <main className="page-shell">
@@ -171,10 +191,13 @@ const ProductDetail = () => {
             <p className="mt-2 text-sm font-semibold text-stone-500">Inclusive of all taxes</p>
 
             <div className="mt-7 grid gap-4 rounded-[1.2rem] bg-white/70 p-5">
-              <div className="flex items-center justify-between gap-4">
-                <span className="text-sm font-bold text-stone-500">Material</span>
-                <span className="text-sm font-black text-stone-950">{product.material}</span>
-              </div>
+              {productSpecs.map(([label, value]) => (
+                <div key={label} className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] gap-4">
+                  <span className="text-sm font-bold text-stone-500">{label}</span>
+                  <span className="text-right text-sm font-black text-stone-950">{value}</span>
+                </div>
+              ))}
+              <div className="border-t border-stone-200" />
               <div className="flex items-center justify-between gap-4">
                 <span className="text-sm font-bold text-stone-500">Delivery</span>
                 <span className="text-sm font-black text-emerald-900">{product.delivery}</span>

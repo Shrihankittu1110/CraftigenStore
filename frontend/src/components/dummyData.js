@@ -1,3 +1,38 @@
+const productSpecs = {
+  1: { colour: 'Multicolour', dimensions: '36L x 24W x 4H cm', weight: '650 g', brand: 'Craftigen' },
+  2: { colour: 'Brown and beige', dimensions: '21L x 14W x 2H cm', weight: '320 g', brand: 'Craftigen' },
+  3: { colour: 'Tan and black', dimensions: '40L x 30W x 8H cm', weight: '720 g', brand: 'Craftigen' },
+  4: { colour: 'Natural wood and black', dimensions: '30L x 30W x 4H cm', weight: '850 g', brand: 'Craftigen' },
+  5: { colour: 'Antique gold', dimensions: '18L x 18W x 24H cm', weight: '900 g', brand: 'Craftigen' },
+  6: { colour: 'Earth brown', dimensions: '45L x 30W x 3H cm', weight: '780 g', brand: 'Craftigen' },
+  7: { colour: 'Gold and multicolour', dimensions: '20L x 12W x 28H cm', weight: '1.1 kg', brand: 'Craftigen' },
+  8: { colour: 'Polished gold', dimensions: '8L x 8W x 15H cm', weight: '280 g', brand: 'Craftigen' },
+  9: { colour: 'Blue and white', dimensions: '12L x 9W x 10H cm', weight: '340 g', brand: 'Craftigen' },
+  10: { colour: 'Antique black and gold', dimensions: '12L x 12W x 18H cm', weight: '420 g', brand: 'Craftigen' },
+  11: { colour: 'Antique brass', dimensions: '22L x 16W x 10H cm', weight: '1.2 kg', brand: 'Craftigen' },
+  12: { colour: 'Cream and multicolour', dimensions: '28L x 18W x 10H cm', weight: '950 g', brand: 'Craftigen' },
+  13: { colour: 'Deep red', dimensions: '24L x 6W x 16H cm', weight: '300 g', brand: 'Craftigen' },
+  14: { colour: 'Copper', dimensions: '18L x 18W x 8H cm', weight: '620 g', brand: 'Craftigen' },
+  15: { colour: 'Multicolour', dimensions: '26L x 10W x 18H cm', weight: '700 g', brand: 'Craftigen' },
+  16: { colour: 'Yellow and blue', dimensions: '15L x 15W x 14H cm', weight: '520 g', brand: 'Craftigen' },
+  17: { colour: 'Terracotta red', dimensions: '12L x 12W x 10H cm each', weight: '600 g', brand: 'Craftigen' },
+  18: { colour: 'Multicolour', dimensions: '9L x 9W x 4H cm each', weight: '420 g', brand: 'Craftigen' },
+  19: { colour: 'Natural beige', dimensions: '36L x 12W x 34H cm', weight: '480 g', brand: 'Craftigen' },
+  20: { colour: 'Brown and red', dimensions: '18L x 8W x 14H cm each', weight: '560 g', brand: 'Craftigen' },
+  21: { colour: 'Transparent multicolour', dimensions: '10L x 10W x 16H cm each', weight: '850 g', brand: 'Craftigen' },
+  22: { colour: 'Gold and brown', dimensions: '35L x 25W x 3H cm', weight: '740 g', brand: 'Craftigen' },
+  23: { colour: 'Assorted colours', dimensions: '30L x 22W x 10H cm', weight: '1 kg', brand: 'Craftigen' },
+  24: { colour: 'Multicolour', dimensions: '22L x 8W x 30H cm', weight: '460 g', brand: 'Craftigen' },
+  25: { colour: 'Clear and multicolour', dimensions: '8L x 8W x 12H cm each', weight: '900 g', brand: 'Craftigen' },
+  26: { colour: 'Natural brown', dimensions: '32L x 24W x 8H cm', weight: '820 g', brand: 'Craftigen' },
+  27: { colour: 'Natural beige', dimensions: '30L x 30W x 24H cm', weight: '490 g', brand: 'Craftigen' },
+  28: { colour: 'Assorted colours', dimensions: '34L x 24W x 12H cm', weight: '1.3 kg', brand: 'Craftigen' },
+  29: { colour: 'Natural bamboo', dimensions: '24L x 12W x 20H cm', weight: '380 g', brand: 'Craftigen' },
+  30: { colour: 'Red, beige and black', dimensions: '60L x 2W x 80H cm', weight: '350 g', brand: 'Craftigen' },
+  31: { colour: 'Blue and beige', dimensions: '45L x 2W x 65H cm each', weight: '520 g', brand: 'Craftigen' },
+  32: { colour: 'Multicolour', dimensions: '20L x 12W x 18H cm', weight: '450 g', brand: 'Craftigen' },
+};
+
 const ItemsData = [
   {
     id: 1,
@@ -415,6 +450,9 @@ const ItemsData = [
     description: 'A hand painted craft accent with colorful detailing for shelves, sideboards, and personal gifting.',
     image: '/img/products/hand_painted.jpg',
   },
-];
+].map((item) => ({
+  ...item,
+  ...(productSpecs[item.id] || {}),
+}));
 
 export default ItemsData;

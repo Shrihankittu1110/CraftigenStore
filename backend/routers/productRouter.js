@@ -56,6 +56,16 @@ const buildProductPayload = (body, options = {}) => {
         payload.material = cleanString(body.material);
     }
 
+    if (!options.partial || body.colour !== undefined || body.color !== undefined) {
+        payload.colour = cleanString(body.colour !== undefined ? body.colour : body.color);
+    }
+
+    ['dimensions', 'weight', 'brand'].forEach((field) => {
+        if (!options.partial || body[field] !== undefined) {
+            payload[field] = cleanString(body[field]);
+        }
+    });
+
     if (!options.partial || body.image !== undefined) {
         payload.image = cleanString(body.image);
     }
@@ -92,6 +102,10 @@ router.get('/getall', asyncHandler(async (req, res) => {
             { title: searchRegex },
             { category: searchRegex },
             { material: searchRegex },
+            { colour: searchRegex },
+            { dimensions: searchRegex },
+            { weight: searchRegex },
+            { brand: searchRegex },
             { description: searchRegex }
         ];
     }

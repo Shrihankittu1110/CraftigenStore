@@ -36,6 +36,30 @@ const myschema = new Schema({
         maxlength: 120,
         default: ''
     },
+    colour: {
+        type: String,
+        trim: true,
+        maxlength: 120,
+        default: ''
+    },
+    dimensions: {
+        type: String,
+        trim: true,
+        maxlength: 120,
+        default: ''
+    },
+    weight: {
+        type: String,
+        trim: true,
+        maxlength: 120,
+        default: ''
+    },
+    brand: {
+        type: String,
+        trim: true,
+        maxlength: 120,
+        default: 'Craftigen'
+    },
     image: {
         type: String,
         default: ''
