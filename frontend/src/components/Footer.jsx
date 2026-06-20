@@ -1,12 +1,16 @@
 import React from "react";
 
+const brandLogoUrl = "https://thebombaystore.com/cdn/shop/files/favicon_32x32.png?v=1616503590";
+
 const Footer = () => {
   return (
     <footer className="border-t border-stone-200 bg-stone-950 text-stone-100">
       <div className="section-wrap grid gap-10 py-12 md:grid-cols-[1.2fr_0.8fr_0.8fr_1fr]">
         <div>
           <div className="mb-5 flex items-center gap-3">
-            <span className="grid h-12 w-12 place-items-center rounded-2xl bg-amber-400 text-lg font-black text-stone-950">C</span>
+            <span className="grid h-12 w-12 place-items-center rounded-2xl bg-white shadow-lg shadow-amber-900/10 ring-1 ring-amber-300/40">
+              <img className="h-8 w-8 object-contain" src={brandLogoUrl} alt="Craftigen elephant logo" />
+            </span>
             <div>
               <p className="text-lg font-black">Craftigen</p>
               <p className="text-xs font-bold uppercase tracking-[0.18em] text-amber-300">Handcrafted Store</p>
