@@ -7,8 +7,10 @@ import useUserContext from "../UserContext";
 import ItemsData from "./dummyData";
 import { useFallbackImage } from "./imageFallback";
 
-const refusalMessage = "I am sorry, this is not my work. I can only help with Craftigen Store products and shopping questions.";
-const unavailableMessage = "Sorry, the items are not available right now.";
+const refusalMessage =
+  "I would love to keep this focused on Craftigen. I can help you find products, compare materials, check prices, understand delivery, use the cart, or move around this website.";
+const unavailableMessage =
+  "I could not find a perfect match in the store right now, but I can still help. Try a category, material, colour, budget, or gift idea.";
 
 const normalizeText = (value) =>
   String(value || "")
@@ -100,6 +102,10 @@ const normalizeBackendProduct = (product) => ({
   badge: product.badge || "Craftigen",
   category: product.category || "Handcrafted",
   material: product.material || "Artisan finish",
+  colour: product.colour || product.color || "",
+  dimensions: product.dimensions || "",
+  weight: product.weight || product.itemWeight || "",
+  brand: product.brand || "Craftigen",
   description: product.description || "A carefully selected handcrafted product from Craftigen Store.",
 });
 
@@ -112,6 +118,7 @@ const catalogItems = ItemsData.map(normalizeCatalogProduct);
 
 const storeKeywords = [
   "add",
+  "address",
   "available",
   "availability",
   "bag",
@@ -124,13 +131,19 @@ const storeKeywords = [
   "candle",
   "cart",
   "category",
+  "checkout",
   "cheap",
   "clock",
+  "colour",
+  "color",
   "contact",
   "cost",
   "cup",
   "decor",
   "delivery",
+  "details",
+  "dimension",
+  "dimensions",
   "diya",
   "find",
   "gift",
@@ -140,9 +153,14 @@ const storeKeywords = [
   "handcrafted",
   "item",
   "items",
+  "login",
+  "order",
+  "orders",
   "journal",
   "kitchen",
   "material",
+  "popular",
+  "profile",
   "pooja",
   "pot",
   "pots",
@@ -152,6 +170,7 @@ const storeKeywords = [
   "purse",
   "recommend",
   "search",
+  "shipping",
   "serveware",
   "show",
   "stationery",
@@ -159,6 +178,7 @@ const storeKeywords = [
   "tray",
   "under",
   "wall",
+  "weight",
 ];
 
 const stopWords = new Set([
@@ -208,6 +228,26 @@ const suggestionPrompts = [
   "Pooja products available",
 ];
 
+const friendlyGreetings = ["hi", "hello", "hey", "hii", "namaste", "thanks", "thank you", "good morning", "good evening"];
+
+const siteHelpTopics = [
+  "cart",
+  "checkout",
+  "login",
+  "order",
+  "orders",
+  "profile",
+  "contact",
+  "support",
+  "delivery",
+  "return",
+  "returns",
+  "browse",
+  "search",
+  "website",
+  "site",
+];
+
 const extractBudget = (message) => {
   const text = normalizeText(message);
   const match = text.match(/(?:under|below|less than|upto|up to)\s*(?:rs|inr|rupees)?\s*(\d+)/);
@@ -224,7 +264,7 @@ const getQueryWords = (message) =>
 const getSearchTerms = (message) => Array.from(new Set(getQueryWords(message).flatMap(getTermVariants)));
 
 const getProductTokens = (item) =>
-  normalizeText(`${item.title} ${item.category} ${item.material} ${item.description}`)
+  normalizeText(`${item.title} ${item.category} ${item.material} ${item.colour || item.color || ""} ${item.dimensions || ""} ${item.weight || ""} ${item.brand || ""} ${item.description}`)
     .split(" ")
     .filter((word) => word.length > 2);
 
@@ -235,6 +275,8 @@ const isStoreRelated = (message, products) => {
   const text = normalizeText(message);
   if (!text) return false;
 
+  if (friendlyGreetings.some((greeting) => text === greeting || text.startsWith(`${greeting} `))) return true;
+  if (siteHelpTopics.some((topic) => text.includes(topic))) return true;
   if (storeKeywords.some((word) => text.includes(word) || getTermVariants(word).some((variant) => text.includes(variant)))) return true;
 
   const queryWords = getQueryWords(message);
@@ -246,7 +288,7 @@ const isStoreRelated = (message, products) => {
 };
 
 const getMatchDetails = (item, queryWords, rawQuery, budget) => {
-  const haystack = normalizeText(`${item.title} ${item.category} ${item.material} ${item.description}`);
+  const haystack = normalizeText(`${item.title} ${item.category} ${item.material} ${item.colour || item.color || ""} ${item.dimensions || ""} ${item.weight || ""} ${item.brand || ""} ${item.description}`);
   const productTokens = getProductTokens(item);
   const reasons = [];
   let score = 0;
@@ -271,6 +313,7 @@ const getMatchDetails = (item, queryWords, rawQuery, budget) => {
   if (rawQuery.includes("bag") && haystack.includes("bags")) score += 3;
   if (rawQuery.includes("bags") && haystack.includes("bag")) score += 3;
   if (rawQuery.includes("best") || rawQuery.includes("top") || rawQuery.includes("rated")) score += (item.rating || 0) * 1.4;
+  if (rawQuery.includes("popular")) score += (item.reviews || 0) / 120 + (item.rating || 0);
   if (rawQuery.includes("gift") && normalizeText(`${item.category} ${item.description}`).includes("gift")) score += 4;
 
   if (budget) {
@@ -331,10 +374,64 @@ const buildBotReply = (message, products) => {
     return { tone: "guard", text: refusalMessage, matches: [], actions: [] };
   }
 
+  if (friendlyGreetings.some((greeting) => text === greeting || text.startsWith(`${greeting} `))) {
+    return {
+      tone: "info",
+      text: "Hi there. I am here to help you shop Craftigen in a simple way. Tell me what you need, like a gift, pooja item, wall decor, material, colour, or budget.",
+      matches: [],
+      actions: ["Show popular products", "Gift items below 1000", "Show pooja items"],
+    };
+  }
+
+  if (text.includes("cart")) {
+    return {
+      tone: "info",
+      text: "You can add items to the cart from product cards, product detail pages, or my product suggestions. If you are not logged in, the website will ask you to login first.",
+      matches: [],
+      actions: ["Show handmade bags", "Gift items below 1000"],
+    };
+  }
+
+  if (text.includes("checkout") || text.includes("buy")) {
+    return {
+      tone: "info",
+      text: "To buy an item, open the product and choose Buy Now, or add products to your cart and continue to checkout. Login is required before purchase.",
+      matches: [],
+      actions: ["Show best rated products", "Show gifts"],
+    };
+  }
+
+  if (text.includes("login") || text.includes("profile")) {
+    return {
+      tone: "info",
+      text: "Use Login to access cart actions, checkout, profile, and your orders. After login, the same product buttons will let you add or buy directly.",
+      matches: [],
+      actions: ["Show categories", "Show popular products"],
+    };
+  }
+
+  if (text.includes("order") || text.includes("orders")) {
+    return {
+      tone: "info",
+      text: "Your order details are available from the orders area after login. I can help you find products before checkout, but I do not access private order data inside chat.",
+      matches: [],
+      actions: ["Show gifting products", "Show kitchen products"],
+    };
+  }
+
+  if (text.includes("return") || text.includes("returns") || text.includes("replacement")) {
+    return {
+      tone: "info",
+      text: "Product detail pages show the return information. Most catalog items currently show a 7 day replacement note.",
+      matches: [],
+      actions: ["Show pooja products", "Show home decor"],
+    };
+  }
+
   if (text.includes("category") || text.includes("categories")) {
     return {
       tone: "info",
-      text: `Craftigen currently has these product categories: ${getCategorySummary(products)}.`,
+      text: `You can browse Craftigen by these categories: ${getCategorySummary(products)}. Pick one and I will show matching products.`,
       matches: [],
       actions: ["Show handmade bags", "Show gifting products"],
     };
@@ -343,7 +440,7 @@ const buildBotReply = (message, products) => {
   if (text.includes("delivery")) {
     return {
       tone: "info",
-      text: "Delivery is listed on every product card. Most products show free delivery or arrive within 3-6 business days.",
+      text: "Delivery is shown on each product card and product detail page. Many items show free delivery, and backend products use a 3-6 business day estimate when no custom delivery text is added.",
       matches: [],
       actions: ["Show fast delivery products", "Show popular gifts"],
     };
@@ -352,9 +449,18 @@ const buildBotReply = (message, products) => {
   if (text.includes("contact") || text.includes("support") || text.includes("help")) {
     return {
       tone: "info",
-      text: "For store support, open the Contact Us page. For product suggestions, tell me the item, category, material, or budget.",
+      text: "For store support, use the Contact Us page. For shopping help here, tell me the product type, category, material, colour, or budget and I will find store items.",
       matches: [],
       actions: ["Show bags", "Show home decor"],
+    };
+  }
+
+  if (text.includes("website") || text.includes("site") || text.includes("browse") || text.includes("search")) {
+    return {
+      tone: "info",
+      text: "I can help you use this website: browse categories, search by product name, material, colour, budget, open product details, add to cart, and continue to checkout after login.",
+      matches: [],
+      actions: ["Show categories", "Show popular products"],
     };
   }
 
@@ -362,7 +468,7 @@ const buildBotReply = (message, products) => {
     const range = getPriceRange(products);
     return {
       tone: "info",
-      text: `Craftigen products currently range from Rs ${formatPrice(range.min)} to Rs ${formatPrice(range.max)}. You can ask things like "gifts under 1000" or "bags under 1500".`,
+      text: `Craftigen products currently range from Rs ${formatPrice(range.min)} to Rs ${formatPrice(range.max)}. You can ask me for something like "gifts under 1000" or "bags under 1500".`,
       matches: [],
       actions: ["Gift items below 1000", "Show handmade bags under 1500"],
     };
@@ -375,7 +481,7 @@ const buildBotReply = (message, products) => {
 
     return {
       tone: "products",
-      text: `Here are the best Craftigen matches${budgetCopy}. I ranked them by product relevance, rating, and availability.`,
+      text: `I found these Craftigen matches${budgetCopy}. Have a look, and you can open the product or add it to your cart from here.`,
       matches,
       actions: ["Best rated products", "Show more gifts", "Show wall decor"],
     };
