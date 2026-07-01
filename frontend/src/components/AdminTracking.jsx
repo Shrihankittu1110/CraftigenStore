@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import Swal from "sweetalert2";
 import { API_BASE_URL } from "../config";
 import { getAuthHeaders } from "../auth";
+import AdminLoadingPopup from "./AdminLoadingPopup";
 import BackButton from "./BackButton";
 
 const trackingSteps = [
@@ -94,6 +95,13 @@ const AdminTracking = () => {
 
   return (
     <main className="page-shell">
+      {loading && (
+        <AdminLoadingPopup
+          title="Loading tracking"
+          message="Fetching shipment records and delivery progress."
+        />
+      )}
+
       <section className="section-wrap py-10">
         <BackButton fallback="/profile" />
         <div className="mt-6 grid gap-5 lg:grid-cols-[1fr_340px] lg:items-stretch">
@@ -135,9 +143,7 @@ const AdminTracking = () => {
           ))}
         </div>
 
-        {loading ? (
-          <div className="mt-6 rounded-2xl border border-stone-200 bg-white p-10 text-center font-bold text-stone-600 shadow-sm">Loading tracking records...</div>
-        ) : !orders.length ? (
+        {!loading && !orders.length ? (
           <div className="mt-6 rounded-2xl border border-stone-200 bg-white p-10 text-center shadow-sm">
             <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-emerald-50 text-emerald-900">
               <i className="fa-solid fa-truck-fast text-2xl" />
@@ -147,7 +153,7 @@ const AdminTracking = () => {
               The tracking queue is empty because no customer orders have been placed yet.
             </p>
           </div>
-        ) : (
+        ) : !loading ? (
           <div className="mt-6 grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
             <div className="overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm">
               <div className="border-b border-stone-200 p-5">
@@ -246,7 +252,7 @@ const AdminTracking = () => {
               </form>
             </aside>
           </div>
-        )}
+        ) : null}
       </section>
     </main>
   );

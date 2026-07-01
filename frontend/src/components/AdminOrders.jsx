@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { API_BASE_URL } from "../config";
 import { getAuthHeaders } from "../auth";
+import AdminLoadingPopup from "./AdminLoadingPopup";
 import BackButton from "./BackButton";
 
 const formatPrice = (value) => Number(value || 0).toLocaleString("en-IN");
@@ -35,6 +36,13 @@ const AdminOrders = () => {
 
   return (
     <main className="page-shell">
+      {loading && (
+        <AdminLoadingPopup
+          title="Loading orders"
+          message="Getting the newest order records, payment status, and totals."
+        />
+      )}
+
       <section className="section-wrap py-12">
         <BackButton fallback="/profile" />
         <div className="surface p-6 sm:p-8">
@@ -56,9 +64,7 @@ const AdminOrders = () => {
           ))}
         </div>
 
-        {loading ? (
-          <div className="mt-6 rounded-2xl border border-stone-200 bg-white p-10 text-center font-bold text-stone-600 shadow-sm">Loading orders...</div>
-        ) : orders.length === 0 ? (
+        {!loading && orders.length === 0 ? (
           <div className="mt-6 rounded-2xl border border-stone-200 bg-white p-10 text-center shadow-sm">
             <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-emerald-50 text-emerald-900">
               <i className="fa-solid fa-receipt text-2xl" />
@@ -68,7 +74,7 @@ const AdminOrders = () => {
               Customer orders will appear here after users complete checkout.
             </p>
           </div>
-        ) : (
+        ) : !loading ? (
           <div className="mt-6 overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm">
             <div className="overflow-x-auto">
               <table className="w-full min-w-[920px] text-left text-sm">
@@ -107,7 +113,7 @@ const AdminOrders = () => {
               </table>
             </div>
           </div>
-        )}
+        ) : null}
       </section>
     </main>
   );

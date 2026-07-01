@@ -2,19 +2,25 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { API_BASE_URL } from "../config";
 import { getAuthHeaders } from "../auth";
+import AdminLoadingPopup from "./AdminLoadingPopup";
 import Avatar from "./Avatar";
 import BackButton from "./BackButton";
 
 const ManageUser = () => {
   const [userList, setUserList] = useState([]);
+  const [loading, setLoading] = useState(true);
   const getDisplayRole = (user) => (user.email?.toLowerCase() === "admin123@gmail.com" ? "admin" : user.role);
   const isVisibleUser = (user) => ["admin", "customer"].includes(getDisplayRole(user));
 
   const fetchUserData = async () => {
-    const res = await fetch(`${API_BASE_URL}/user/getall`, { headers: getAuthHeaders() });
-    if (res.status === 200) {
-      const data = await res.json();
-      setUserList(data.filter(isVisibleUser));
+    try {
+      const res = await fetch(`${API_BASE_URL}/user/getall`, { headers: getAuthHeaders() });
+      if (res.status === 200) {
+        const data = await res.json();
+        setUserList(data.filter(isVisibleUser));
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -41,6 +47,13 @@ const ManageUser = () => {
 
   return (
     <main className="page-shell">
+      {loading && (
+        <AdminLoadingPopup
+          title="Loading users"
+          message="Preparing the latest customer and admin account list."
+        />
+      )}
+
       <section className="section-wrap py-12">
         <div className="mb-8">
           <BackButton fallback="/profile" />
@@ -61,7 +74,7 @@ const ManageUser = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-stone-200 bg-white/70">
-                {userList.map((user) => (
+                {!loading && userList.map((user) => (
                   <tr key={user._id} className="transition hover:bg-emerald-50/70">
                     <td className="px-5 py-4 font-bold text-stone-950">{user.name}</td>
                     <td className="px-5 py-4 text-stone-600">{user.email}</td>
@@ -84,6 +97,11 @@ const ManageUser = () => {
               </tbody>
             </table>
           </div>
+          {!loading && userList.length === 0 && (
+            <div className="border-t border-stone-200 bg-white/80 p-10 text-center font-bold text-stone-600">
+              No users found.
+            </div>
+          )}
         </div>
       </section>
     </main>
